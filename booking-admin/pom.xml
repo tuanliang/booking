@@ -60,7 +60,11 @@
             <groupId>com.shiyi</groupId>
             <artifactId>booking-generator</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.shiyi</groupId>
+            <artifactId>booking-business</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -196,6 +196,7 @@
         <module>booking-quartz</module>
         <module>booking-generator</module>
         <module>booking-common</module>
+        <module>booking-business</module>
     </modules>
     <packaging>pom</packaging>
 
