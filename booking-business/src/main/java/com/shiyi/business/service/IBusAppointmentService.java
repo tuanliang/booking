@@ -59,4 +59,18 @@ public interface IBusAppointmentService
      * @return 结果
      */
     public int deleteBusAppointmentById(Long id);
+
+    /**
+     * 用户到店
+     * @param id
+     * @return
+     */
+    int arralShop(Long id);
+
+    /**
+     * 预约取消
+     * @param id
+     * @return
+     */
+    int cancel(Long id);
 }

@@ -2,6 +2,7 @@ package com.shiyi.business.mapper;
 
 import java.util.List;
 import com.shiyi.business.domain.BusAppointment;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 预约信息Mapper接口
@@ -58,4 +59,8 @@ public interface BusAppointmentMapper
      * @return 结果
      */
     public int deleteBusAppointmentByIds(Long[] ids);
+
+    int changeArralShopStatus(@Param("id") Long id,@Param("status") Integer status);
+
+    int changeStatus(@Param("id") Long id,@Param("status") Integer status);
 }

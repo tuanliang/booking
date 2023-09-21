@@ -142,6 +142,69 @@ public class BusAppointmentServiceImpl implements IBusAppointmentService
     @Override
     public int deleteBusAppointmentById(Long id)
     {
+        // 1.非空校验
+        if(id==null){
+            throw new RuntimeException("非法参数");
+        }
+        // 2.根据id查询对象
+        BusAppointment busAppointment = busAppointmentMapper.selectBusAppointmentById(id);
+        if(busAppointment==null){
+            throw new RuntimeException("非法参数");
+        }
+        // 3.判断状态是否为预约中或者取消
+        if(!(BusAppointment.STATUS_APPOINTMENT.equals(busAppointment.getStatus())||
+                BusAppointment.STATUS_CANCEL.equals(busAppointment.getStatus()))){
+            throw new RuntimeException("状态必须为预约中或取消");
+        }
         return busAppointmentMapper.deleteBusAppointmentById(id);
+    }
+
+    /**
+     * 用户到店
+     * @param id
+     * @return
+     */
+    @Override
+    public int arralShop(Long id) {
+        // 1.非空校验
+        if(id==null){
+            throw new RuntimeException("非法参数");
+        }
+        // 2.根据id查询对象
+        BusAppointment busAppointment = busAppointmentMapper.selectBusAppointmentById(id);
+        if(busAppointment==null){
+            throw new RuntimeException("非法参数");
+        }
+        // 3.判断状态是否为预约中
+        if(!BusAppointment.STATUS_APPOINTMENT.equals(busAppointment.getStatus())){
+            throw new RuntimeException("状态必须为预约中");
+        }
+        // 4.修改状态为到店状态
+        return busAppointmentMapper.changeArralShopStatus(id,BusAppointment.STATUS_ARRIVAL );
+
+    }
+
+    /**
+     * 预约取消
+     * @param id
+     * @return
+     */
+    @Override
+    public int cancel(Long id) {
+        // 1.判断id不为空
+        if(id==null){
+            throw new RuntimeException("非法参数");
+        }
+        // 2.根据id查询对象
+        BusAppointment busAppointment = busAppointmentMapper.selectBusAppointmentById(id);
+        if(busAppointment==null){
+            throw new RuntimeException("非法参数");
+        }
+        // 3.判断状态是否为预约中
+        if(!BusAppointment.STATUS_APPOINTMENT.equals(busAppointment.getStatus())){
+            throw new RuntimeException("状态必须为预约中");
+        }
+        // 4.修改状态为取消状态
+        return busAppointmentMapper.changeStatus(id,BusAppointment.STATUS_CANCEL) ;
     }
 }

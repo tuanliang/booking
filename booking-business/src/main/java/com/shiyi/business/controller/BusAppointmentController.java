@@ -98,9 +98,29 @@ public class BusAppointmentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('appointment:appointment:remove')")
     @Log(title = "预约信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@DeleteMapping("/{id}")
+    public AjaxResult remove(@PathVariable Long id)
     {
-        return toAjax(busAppointmentService.deleteBusAppointmentByIds(ids));
+        return toAjax(busAppointmentService.deleteBusAppointmentById(id));
+    }
+
+    /**
+     * 用户到店
+     */
+    @Log(title = "预约信息", businessType = BusinessType.UPDATE)
+    @PutMapping("/arral/{id}")
+    public AjaxResult arral(@PathVariable Long id)
+    {
+        return toAjax(busAppointmentService.arralShop(id));
+    }
+
+    /**
+     * 预约取消
+     */
+    @Log(title = "预约取消", businessType = BusinessType.UPDATE)
+    @PutMapping("/cancel/{id}")
+    public AjaxResult cancel(@PathVariable Long id)
+    {
+        return toAjax(busAppointmentService.cancel(id));
     }
 }
