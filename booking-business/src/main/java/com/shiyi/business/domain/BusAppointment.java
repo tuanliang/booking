@@ -2,8 +2,8 @@ package com.shiyi.business.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.Getter;
+import lombok.Setter;
 import com.shiyi.common.annotation.Excel;
 import com.shiyi.common.core.domain.BaseEntity;
 
@@ -13,8 +13,16 @@ import com.shiyi.common.core.domain.BaseEntity;
  * @author shiyi
  * @date 2023-09-20
  */
+@Getter
+@Setter
 public class BusAppointment extends BaseEntity
 {
+    public static final Integer STATUS_APPOINTMENT = 0;//预约中
+    public static final Integer STATUS_ARRIVAL = 1;//已到店
+    public static final Integer STATUS_CANCEL = 2;//用户取消
+    public static final Integer STATUS_OVERTIME = 3;//超时取消
+    public static final Integer STATUS_SETTLE  = 4;//结算单生成
+    public static final Integer STATUS_PAYED  = 5;//已支付
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
@@ -29,13 +37,13 @@ public class BusAppointment extends BaseEntity
     private Long customerPhone;
 
     /** 预约时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "预约时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "预约时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date appointmentTime;
 
     /** 实际到店时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "实际到店时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "实际到店时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date actualArrivalTime;
 
     /** 车牌号码 */
@@ -58,111 +66,5 @@ public class BusAppointment extends BaseEntity
     @Excel(name = "状态【预约0/已到店1/用户取消2/超时取消3】")
     private Integer status;
 
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
 
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setCustomerName(String customerName) 
-    {
-        this.customerName = customerName;
-    }
-
-    public String getCustomerName() 
-    {
-        return customerName;
-    }
-    public void setCustomerPhone(Long customerPhone) 
-    {
-        this.customerPhone = customerPhone;
-    }
-
-    public Long getCustomerPhone() 
-    {
-        return customerPhone;
-    }
-    public void setAppointmentTime(Date appointmentTime) 
-    {
-        this.appointmentTime = appointmentTime;
-    }
-
-    public Date getAppointmentTime() 
-    {
-        return appointmentTime;
-    }
-    public void setActualArrivalTime(Date actualArrivalTime) 
-    {
-        this.actualArrivalTime = actualArrivalTime;
-    }
-
-    public Date getActualArrivalTime() 
-    {
-        return actualArrivalTime;
-    }
-    public void setLicensePlate(String licensePlate) 
-    {
-        this.licensePlate = licensePlate;
-    }
-
-    public String getLicensePlate() 
-    {
-        return licensePlate;
-    }
-    public void setCarSeries(String carSeries) 
-    {
-        this.carSeries = carSeries;
-    }
-
-    public String getCarSeries() 
-    {
-        return carSeries;
-    }
-    public void setServiceType(Integer serviceType) 
-    {
-        this.serviceType = serviceType;
-    }
-
-    public Integer getServiceType() 
-    {
-        return serviceType;
-    }
-    public void setInfo(String info) 
-    {
-        this.info = info;
-    }
-
-    public String getInfo() 
-    {
-        return info;
-    }
-    public void setStatus(Integer status) 
-    {
-        this.status = status;
-    }
-
-    public Integer getStatus() 
-    {
-        return status;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("customerName", getCustomerName())
-            .append("customerPhone", getCustomerPhone())
-            .append("appointmentTime", getAppointmentTime())
-            .append("actualArrivalTime", getActualArrivalTime())
-            .append("licensePlate", getLicensePlate())
-            .append("carSeries", getCarSeries())
-            .append("serviceType", getServiceType())
-            .append("createTime", getCreateTime())
-            .append("info", getInfo())
-            .append("status", getStatus())
-            .toString();
-    }
 }

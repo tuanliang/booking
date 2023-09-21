@@ -2,6 +2,7 @@ package com.shiyi.business.service;
 
 import java.util.List;
 import com.shiyi.business.domain.BusAppointment;
+import com.shiyi.business.domain.vo.BusAppointmentVo;
 
 /**
  * 预约信息Service接口
@@ -33,7 +34,7 @@ public interface IBusAppointmentService
      * @param busAppointment 预约信息
      * @return 结果
      */
-    public int insertBusAppointment(BusAppointment busAppointment);
+    public int insertBusAppointment(BusAppointmentVo busAppointment);
 
     /**
      * 修改预约信息
@@ -41,7 +42,7 @@ public interface IBusAppointmentService
      * @param busAppointment 预约信息
      * @return 结果
      */
-    public int updateBusAppointment(BusAppointment busAppointment);
+    public int updateBusAppointment(BusAppointmentVo busAppointment);
 
     /**
      * 批量删除预约信息

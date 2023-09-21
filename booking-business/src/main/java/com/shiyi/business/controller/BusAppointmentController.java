@@ -2,6 +2,8 @@ package com.shiyi.business.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.shiyi.business.domain.vo.BusAppointmentVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,9 +77,9 @@ public class BusAppointmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('appointment:appointment:add')")
     @Log(title = "预约信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BusAppointment busAppointment)
+    public AjaxResult add(@RequestBody BusAppointmentVo busAppointmentVo)
     {
-        return toAjax(busAppointmentService.insertBusAppointment(busAppointment));
+        return toAjax(busAppointmentService.insertBusAppointment(busAppointmentVo));
     }
 
     /**
@@ -86,7 +88,7 @@ public class BusAppointmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('appointment:appointment:edit')")
     @Log(title = "预约信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BusAppointment busAppointment)
+    public AjaxResult edit(@RequestBody BusAppointmentVo busAppointment)
     {
         return toAjax(busAppointmentService.updateBusAppointment(busAppointment));
     }
