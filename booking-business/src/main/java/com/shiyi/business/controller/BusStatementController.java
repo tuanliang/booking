@@ -89,9 +89,9 @@ public class BusStatementController extends BaseController
     @PreAuthorize("@ss.hasPermi('appointment:statement:edit')")
     @Log(title = "结算单", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BusStatement busStatement)
+    public AjaxResult edit(@RequestBody BusStatementVo busStatementVo)
     {
-        return toAjax(busStatementService.updateBusStatement(busStatement));
+        return toAjax(busStatementService.updateBusStatement(busStatementVo));
     }
 
     /**
@@ -99,9 +99,9 @@ public class BusStatementController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('appointment:statement:remove')")
     @Log(title = "结算单", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@DeleteMapping("/{id}")
+    public AjaxResult remove(@PathVariable Long id)
     {
-        return toAjax(busStatementService.deleteBusStatementByIds(ids));
+        return toAjax(busStatementService.deleteBusStatementById(id));
     }
 }

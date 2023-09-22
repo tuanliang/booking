@@ -30,7 +30,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectBusStatementList" parameterType="BusStatement" resultMap="BusStatementResult">
         <include refid="selectBusStatement"/>
-        <where>  
+        <where>
+            <if test="1==1">
+                and is_delete =0
+            </if>
            <if test="startTime!=null">
                and actual_arrival_time &gt; #{startTime}
            </if>
@@ -118,4 +121,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    <delete id="deleteRelation">
+        delete from bus_statement_item where statement_id=#{id}
+    </delete>
+    <update id="updateIsDeleteById">
+        update bus_statement set is_delete = 1 where id = #{id}
+    </update>
 </mapper>

@@ -42,7 +42,7 @@ public interface IBusStatementService
      * @param busStatement 结算单
      * @return 结果
      */
-    public int updateBusStatement(BusStatement busStatement);
+    public int updateBusStatement(BusStatementVo busStatement);
 
     /**
      * 批量删除结算单

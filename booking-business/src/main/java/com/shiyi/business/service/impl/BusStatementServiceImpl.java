@@ -84,12 +84,35 @@ public class BusStatementServiceImpl implements IBusStatementService
     /**
      * 修改结算单
      * 
-     * @param busStatement 结算单
+     * @param busStatementVo 结算单
      * @return 结果
      */
     @Override
-    public int updateBusStatement(BusStatement busStatement)
+    public int updateBusStatement(BusStatementVo busStatementVo)
     {
+        // 1.判断vo非空
+        if(busStatementVo==null){
+            throw new RuntimeException("非法参数");
+        }
+        // 2.根据id查询数据
+        BusStatement busStatement = busStatementMapper.selectBusStatementById(busStatementVo.getId());
+        if(busStatement==null){
+            throw new RuntimeException("非法操作");
+        }
+        // 3.判断手机号码格式、车牌号码格式，是否处于消费中
+        if(!RegexUtils.isPhoneLegal(busStatementVo.getCustomerPhone())){
+            throw new RuntimeException("手机号码格式不正确");
+        }
+        VehiclePlateNoUtil.VehiclePlateNoEnum vehiclePlateNo = VehiclePlateNoUtil.getVehiclePlateNo(busStatementVo.getLicensePlate());
+        if(vehiclePlateNo==null){
+            throw new RuntimeException("车牌号码格式不正确");
+        }
+        if(!(BusStatement.STATUS_CONSUME.equals(busStatement.getStatus()))){
+            throw new RuntimeException("状态必须为消费中");
+        }
+        // 4.把vo对象封装到对象中
+        BeanUtils.copyProperties(busStatementVo,busStatement);
+        // 5.更新数据库数据
         return busStatementMapper.updateBusStatement(busStatement);
     }
 
@@ -114,6 +137,22 @@ public class BusStatementServiceImpl implements IBusStatementService
     @Override
     public int deleteBusStatementById(Long id)
     {
-        return busStatementMapper.deleteBusStatementById(id);
+        // 1.判断id不为空
+        if(id==null){
+            throw new RuntimeException("非法操作");
+        }
+        // 2.根据id查询数据
+        BusStatement busStatement = busStatementMapper.selectBusStatementById(id);
+        if(busStatement==null){
+            throw new RuntimeException("非法操作");
+        }
+        // 3.判断状态
+        if(!BusStatement.STATUS_CONSUME.equals(busStatement.getStatus())){
+            throw new RuntimeException("状态不合法");
+        }
+        // 4.中间表删除掉
+        busStatementMapper.deleteRelation(id);
+        // 6.修改isDelete
+        return busStatementMapper.updateIsDeleteById(id);
     }
 }

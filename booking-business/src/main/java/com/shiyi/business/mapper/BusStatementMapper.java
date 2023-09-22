@@ -58,4 +58,17 @@ public interface BusStatementMapper
      * @return 结果
      */
     public int deleteBusStatementByIds(Long[] ids);
+
+    /**
+     * 根据id删除结算单和中间表
+     * @param id
+     */
+    void deleteRelation(Long id);
+
+    /**
+     * 修改isDelete的属性
+     * @param id
+     * @return
+     */
+    int updateIsDeleteById(Long id);
 }
