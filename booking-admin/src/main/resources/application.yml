@@ -42,9 +42,11 @@ logging:
 # Spring配置
 spring:
   activiti:
-    history-level: audit
+    database-schema-update: true
     db-history-used: true
-
+    history-level: full
+    check-process-definitions: false
+    use-strong-uuids: false
   main:
     allow-bean-definition-overriding: true
   # 资源信息
