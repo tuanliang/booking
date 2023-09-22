@@ -71,4 +71,11 @@ public interface BusStatementMapper
      * @return
      */
     int updateIsDeleteById(Long id);
+
+    /**
+     * 根据预约单id查询结算单数据
+     * @param id
+     * @return
+     */
+    BusStatement selectByAppointmentId(Long id);
 }

@@ -61,4 +61,12 @@ public class BusStatementItemController extends BaseController
         return toAjax(busStatementItemService.insertBusStatementItem(busStatementItem));
     }
 
+
+    @Log(title = "结算单支付", businessType = BusinessType.INSERT)
+    @PutMapping("/pay/{id}")
+    public AjaxResult add(@PathVariable Long id)
+    {
+        busStatementItemService.pay(id);
+        return AjaxResult.success();
+    }
 }

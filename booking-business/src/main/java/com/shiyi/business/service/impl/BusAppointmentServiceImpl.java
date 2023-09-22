@@ -3,12 +3,15 @@ package com.shiyi.business.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.shiyi.business.domain.BusStatement;
 import com.shiyi.business.domain.vo.BusAppointmentVo;
+import com.shiyi.business.mapper.BusStatementMapper;
 import com.shiyi.business.util.RegexUtils;
 import com.shiyi.business.util.VehiclePlateNoUtil;
 import com.shiyi.common.utils.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import com.shiyi.business.mapper.BusAppointmentMapper;
 import com.shiyi.business.domain.BusAppointment;
@@ -25,6 +28,8 @@ public class BusAppointmentServiceImpl implements IBusAppointmentService
 {
     @Autowired
     private BusAppointmentMapper busAppointmentMapper;
+    @Autowired
+    private BusStatementMapper busStatementMapper;
 
     /**
      * 查询预约信息
@@ -207,4 +212,49 @@ public class BusAppointmentServiceImpl implements IBusAppointmentService
         // 4.修改状态为取消状态
         return busAppointmentMapper.changeStatus(id,BusAppointment.STATUS_CANCEL) ;
     }
+
+    /**
+     * 预约结算单生成
+     * @param id
+     * @return
+     */
+    @Override
+    public Long generate(Long id) {
+        // 1.判断id不为空
+        if(id==null){
+            throw new RuntimeException("非法操作");
+        }
+        // 2.根据id查询数据
+        BusAppointment busAppointment = busAppointmentMapper.selectBusAppointmentById(id);
+        if(busAppointment==null){
+            throw new RuntimeException("非法操作");
+        }
+        // 3.判断状态是否为到店、结算单已生成、已支付
+        if(!(BusAppointment.STATUS_ARRIVAL.equals(busAppointment.getStatus())||
+                BusAppointment.STATUS_SETTLE.equals(busAppointment.getStatus())||
+                BusAppointment.STATUS_PAYED.equals(busAppointment.getStatus()))){
+            throw new RuntimeException("状态不合法");
+        }
+        // 4.根据预约单id上结算单表中查询数据
+        BusStatement busStatement= busStatementMapper.selectByAppointmentId(busAppointment.getId());
+        // 5.判断结算单是否为空
+        if(busStatement==null){
+            // 5.1创建BusStatement对象,BeanUtils.copy
+            busStatement= new BusStatement();
+            BeanUtils.copyProperties(busAppointment,busStatement);
+            // 5.2设置status，appointment_id,createTime
+            busStatement.setStatus(BusStatement.STATUS_CONSUME);
+            busStatement.setAppointmentId(busAppointment.getId());
+            busStatement.setCreateTime(new Date());
+            // 5.3BusStatement保存到数据库
+            busStatementMapper.insertBusStatement(busStatement);
+            // 6.修改预约单结算状态为已生成
+            busAppointmentMapper.changeStatus(id,BusAppointment.STATUS_SETTLE);
+        }
+
+
+        return busStatement.getId();
+    }
+
+
 }

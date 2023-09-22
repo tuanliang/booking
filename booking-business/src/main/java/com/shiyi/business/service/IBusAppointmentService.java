@@ -73,4 +73,11 @@ public interface IBusAppointmentService
      * @return
      */
     int cancel(Long id);
+
+    /**
+     * 预约中结算单生成
+     * @param id
+     * @return
+     */
+    Long generate(Long id);
 }

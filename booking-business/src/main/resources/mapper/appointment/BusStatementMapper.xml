@@ -127,4 +127,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateIsDeleteById">
         update bus_statement set is_delete = 1 where id = #{id}
     </update>
+    <select id="selectByAppointmentId" resultMap="BusStatementResult">
+        select * from bus_statement where appointment_id = #{id}
+    </select>
 </mapper>

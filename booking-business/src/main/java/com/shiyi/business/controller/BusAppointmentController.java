@@ -123,4 +123,16 @@ public class BusAppointmentController extends BaseController
     {
         return toAjax(busAppointmentService.cancel(id));
     }
+
+    /**
+     * 结算单生成
+     */
+    @Log(title = "预约结算单生成", businessType = BusinessType.UPDATE)
+    @PutMapping("/generate/{id}")
+    public AjaxResult generate(@PathVariable Long id)
+    {
+        Long busStatementId = busAppointmentService.generate(id);
+        return AjaxResult.success(busStatementId);
+    }
+
 }

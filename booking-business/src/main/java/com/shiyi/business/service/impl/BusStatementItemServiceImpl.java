@@ -1,11 +1,15 @@
 package com.shiyi.business.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
+import com.shiyi.business.domain.BusAppointment;
 import com.shiyi.business.domain.BusStatement;
 import com.shiyi.business.domain.vo.BusStatementItemVo;
+import com.shiyi.business.mapper.BusAppointmentMapper;
 import com.shiyi.business.mapper.BusStatementMapper;
+import com.shiyi.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shiyi.business.mapper.BusStatementItemMapper;
@@ -26,6 +30,8 @@ public class BusStatementItemServiceImpl implements IBusStatementItemService
     private BusStatementItemMapper busStatementItemMapper;
     @Autowired
     private BusStatementMapper busStatementMapper;
+    @Autowired
+    private BusAppointmentMapper busAppointmentMapper;
 
     /**
      * 查询结算单明细
@@ -135,5 +141,36 @@ public class BusStatementItemServiceImpl implements IBusStatementItemService
     public int deleteBusStatementItemById(Long id)
     {
         return busStatementItemMapper.deleteBusStatementItemById(id);
+    }
+
+    /**
+     * 支付
+     * @param id
+     */
+    @Override
+    @Transactional
+    public void pay(Long id) {
+        // 1.id非空校验
+        if(id==null){
+            throw new RuntimeException("非法参数");
+        }
+        // 2.根据id查询数据
+        BusStatement busStatement = busStatementMapper.selectBusStatementById(id);
+        if(busStatement==null){
+            throw new RuntimeException("非法操作");
+        }
+        // 3.判断是否为消费中状态
+        if(!BusStatement.STATUS_CONSUME.equals(busStatement.getStatus())){
+            throw new RuntimeException("必须为消费中状态");
+        }
+        // 4.修改状态，收款人id，收款时间
+        busStatement.setStatus(BusStatement.STATUS_PAID);
+        busStatement.setPayeeId(SecurityUtils.getUserId());
+        busStatement.setPayTime(new Date());
+        busStatementMapper.updateBusStatement(busStatement);
+        // 5.判断当前结算单是否是通过预约方式创建结算单，如果是修改预约单状态为已支付
+        if(busStatement.getAppointmentId()!=null){
+            busAppointmentMapper.changeStatus(busStatement.getAppointmentId(), BusAppointment.STATUS_PAYED);
+        }
     }
 }

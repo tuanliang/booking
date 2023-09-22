@@ -59,4 +59,10 @@ public interface IBusStatementItemService
      * @return 结果
      */
     public int deleteBusStatementItemById(Long id);
+
+    /**
+     * 支付
+     * @param id
+     */
+    void pay(Long id);
 }
