@@ -1,6 +1,7 @@
 package com.shiyi.business.service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import com.shiyi.business.domain.BusBpmnInfo;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,4 +70,19 @@ public interface IBusBpmnInfoService
      * @param info
      */
     void flow(Integer bpmnType, String bpmnLabel, MultipartFile file, String info) throws IOException;
+
+
+    /**
+     * 流程文件查看
+     * @param type
+     * @param id
+     * @return
+     */
+    InputStream queryProcess(String type, Long id);
+
+    /**
+     * 流程定义撤销
+     * @param id
+     */
+    void revoke(Long id);
 }

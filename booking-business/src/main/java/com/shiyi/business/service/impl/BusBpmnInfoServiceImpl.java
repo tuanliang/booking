@@ -1,13 +1,18 @@
 package com.shiyi.business.service.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 import com.shiyi.common.utils.StringUtils;
 import com.shiyi.common.utils.file.FileUploadUtils;
+import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shiyi.business.mapper.BusBpmnInfoMapper;
@@ -29,6 +34,8 @@ public class BusBpmnInfoServiceImpl implements IBusBpmnInfoService
     private BusBpmnInfoMapper busBpmnInfoMapper;
     @Autowired
     private RepositoryService repositoryService;
+    @Autowired
+    private RuntimeService runtimeService;
 
     /**
      * 查询流程定义明细
@@ -137,5 +144,79 @@ public class BusBpmnInfoServiceImpl implements IBusBpmnInfoService
         busBpmnInfo.setVersion(Long.valueOf(processDefinition.getVersion()));
         busBpmnInfo.setProcessDefinitionKey(processDefinition.getKey());
         busBpmnInfoMapper.insertBusBpmnInfo(busBpmnInfo);
+    }
+
+    /**
+     * 流程文件的查看
+     * @param type
+     * @param id
+     * @return
+     */
+    @Override
+    public InputStream queryProcess(String type, Long id) {
+        // 1.判断id，type不为空
+        if(id==null||StringUtils.isEmpty(type)){
+            throw new RuntimeException("非法操作");
+        }
+        // 2.根据id查询bpmnInfo对象
+        BusBpmnInfo busBpmnInfo = busBpmnInfoMapper.selectBusBpmnInfoById(id);
+        if(busBpmnInfo==null){
+            throw new RuntimeException("非法操作");
+        }
+        // 3.查询流程定义对象
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().
+                processDefinitionKey(busBpmnInfo.getProcessDefinitionKey()).
+                processDefinitionVersion(Integer.parseInt(String.valueOf(busBpmnInfo.getVersion()))).singleResult();
+
+
+        // 4.判断type是xml还是png
+        InputStream inputStream = null;
+        if("xml".equals(type)){
+            inputStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(), processDefinition.getResourceName());
+
+        }else if("png".equals(type)){
+            DefaultProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
+            // 获取bpmnModel
+            BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinition.getId());
+            inputStream = generator.generateDiagram(bpmnModel, Collections.emptyList(),Collections.emptyList(),"宋体","宋体","宋体");
+        }else{
+            throw new RuntimeException("非法操作");
+        }
+        return inputStream;
+    }
+
+    /**
+     * 流程定义的撤销
+     * @param id
+     */
+    @Override
+    @Transactional
+    public void revoke(Long id) {
+        // 1.判断id不为空，根据id查询数据
+        if(id==null){
+            throw new RuntimeException("非法操作");
+        }
+        BusBpmnInfo busBpmnInfo = busBpmnInfoMapper.selectBusBpmnInfoById(id);
+        if(busBpmnInfo==null){
+            throw new RuntimeException("非法操作");
+        }
+        // 2.删除bpmnInfo对象
+        busBpmnInfoMapper.deleteBusBpmnInfoById(id);
+        /**
+         * TODO
+         * 1.根据流程定义查询，流程定义的流程实例
+         * 2.遍历流程实例集合
+         * 3.根据流程实例获取businessKey（业务表id）
+         * 4.根据businessKey把状态修改为初始化状态
+         */
+
+        // 3.删除流程定义的信息，包括流程定义下的流程实例
+        /**
+         * 如何获取deploymentId，如果能拿到流程定义对象，可以拿到deploymentId
+         */
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().
+                processDefinitionKey(busBpmnInfo.getProcessDefinitionKey()).
+                processDefinitionVersion(Integer.parseInt(String.valueOf(busBpmnInfo.getVersion()))).singleResult();
+        repositoryService.deleteDeployment(processDefinition.getDeploymentId(),true);
     }
 }

@@ -1,8 +1,11 @@
 package com.shiyi.business.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,5 +57,15 @@ public class BusBpmnInfoController extends BaseController
         return  AjaxResult.success();
     }
 
+    @GetMapping("/{type}/{id}")
+    public void queryProcess(@PathVariable String type,@PathVariable Long id,HttpServletResponse response) throws IOException {
+        InputStream inputStream = busBpmnInfoService.queryProcess(type,id);
+        IOUtils.copy(inputStream,response.getOutputStream());
+    }
 
+    @DeleteMapping("/{id}")
+    public AjaxResult revoke(@PathVariable Long id ){
+        busBpmnInfoService.revoke(id);
+        return AjaxResult.success();
+    }
 }
