@@ -95,5 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="changeSaleStatus">
         update bus_service_item set sale_status = #{status} where id = #{id}
     </update>
-
+    <update id="changeStatus">
+        update bus_service_item set audit_status = #{status} where id = #{id}
+    </update>
 </mapper>

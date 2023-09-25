@@ -67,4 +67,11 @@ public interface BusServiceItemMapper
      * @return
      */
     int changeSaleStatus(@Param("id") Long id,@Param("status") Integer status);
+
+    /**
+     * 修改状态
+     * @param id
+     * @param status
+     */
+    void changeStatus(@Param("id") Long id,@Param("status") Integer status);
 }

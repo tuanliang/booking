@@ -58,4 +58,11 @@ public interface BusBpmnInfoMapper
      * @return 结果
      */
     public int deleteBusBpmnInfoByIds(Long[] ids);
+
+    /**
+     * 根据类型查询数据（为套餐审核的）
+     * @param i
+     * @return
+     */
+    BusBpmnInfo queryByType(int type);
 }

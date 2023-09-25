@@ -4,6 +4,8 @@ import java.util.List;
 import com.shiyi.business.domain.BusServiceItem;
 import com.shiyi.business.domain.vo.BusAppointmentVo;
 import com.shiyi.business.domain.vo.BusServiceItemVo;
+import com.shiyi.business.domain.vo.StartAuditVo;
+import com.shiyi.business.qo.ServiceItemAuditInfo;
 
 /**
  * 服务项Service接口
@@ -74,4 +76,18 @@ public interface IBusServiceItemService
      * @return
      */
     int saleOff(Long id);
+
+    /**
+     * 发起审核
+     * @param id
+     * @return
+     */
+    ServiceItemAuditInfo auditPage(Long id);
+
+
+    /**
+     * 发起审核
+     * @param vo
+     */
+    void audit(StartAuditVo vo);
 }

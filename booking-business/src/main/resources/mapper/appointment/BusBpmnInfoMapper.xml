@@ -78,4 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    <select id="queryByType" resultMap="BusBpmnInfoResult">
+        select * from bus_bpmn_info where bpmn_type = #{type} order by version desc limit 0,1
+    </select>
 </mapper>

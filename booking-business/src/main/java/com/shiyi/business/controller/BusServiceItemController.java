@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.shiyi.business.domain.vo.BusAppointmentVo;
 import com.shiyi.business.domain.vo.BusServiceItemVo;
+import com.shiyi.business.domain.vo.StartAuditVo;
+import com.shiyi.business.qo.ServiceItemAuditInfo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -125,5 +127,28 @@ public class BusServiceItemController extends BaseController
     @PutMapping("/saleOff/{id}")
     public AjaxResult saleOff(@PathVariable Long id){
         return toAjax(busServiceItemService.saleOff(id));
+    }
+
+    /**
+     * 发起审核
+     * @param id
+     * @return
+     */
+    @GetMapping("/audit/{id}")
+    public AjaxResult auditPage(@PathVariable Long id){
+        ServiceItemAuditInfo info = busServiceItemService.auditPage(id);
+        return AjaxResult.success(info);
+    }
+
+    /**
+     * 发起审核确定
+     * @param vo
+     * @return
+     */
+    @Log(title = "套餐审核", businessType = BusinessType.UPDATE)
+    @PutMapping("/audit")
+    public AjaxResult audit(@RequestBody StartAuditVo vo){
+        busServiceItemService.audit(vo);
+        return AjaxResult.success();
     }
 }
