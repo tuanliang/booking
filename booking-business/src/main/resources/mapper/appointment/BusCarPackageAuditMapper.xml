@@ -95,4 +95,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="changeStatus">
         update bus_car_package_audit set status = #{status} where id = #{id}
     </update>
+    <select id="selectBusCarPackageAuditByIds" resultMap="BusCarPackageAuditResult">
+        select * from bus_car_package_audit where status = 0 and id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="selectDoneBusCarPackageAuditByIds" resultMap="BusCarPackageAuditResult">
+        select * from bus_car_package_audit where  id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

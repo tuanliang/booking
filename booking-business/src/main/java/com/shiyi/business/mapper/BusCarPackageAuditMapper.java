@@ -1,5 +1,6 @@
 package com.shiyi.business.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.shiyi.business.domain.BusCarPackageAudit;
 import org.apache.ibatis.annotations.Param;
@@ -66,4 +67,13 @@ public interface BusCarPackageAuditMapper
      * @param status
      */
     void changeStatus(@Param("id") Long id,@Param("status") Integer status);
+
+    /**
+     * 根据id集和查询审核数据
+     * @param ids
+     * @return
+     */
+    List<BusCarPackageAudit> selectBusCarPackageAuditByIds(@Param("ids") ArrayList<Long> ids);
+
+    List<BusCarPackageAudit> selectDoneBusCarPackageAuditByIds(@Param("ids")ArrayList<Long> ids);
 }

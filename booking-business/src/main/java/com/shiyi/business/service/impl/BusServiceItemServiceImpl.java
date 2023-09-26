@@ -320,7 +320,7 @@ public class BusServiceItemServiceImpl implements IBusServiceItemService
             map.put("financeId",vo.getFinanceId());
         }
         // 6.3把折扣金额设置流程变量中，细节：流程变量不支持BigDecmail类型，需要把他转换成Long类型
-        map.put("discountPrice",busServiceItem.getDiscountPrice().longValue());
+        map.put("disCountPrice",busServiceItem.getDiscountPrice().longValue());
         // 7.调用runTimeService.startProcessInstanceBykey(key,businessKey,map)启动
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(bpmnInfo.getProcessDefinitionKey(), busCarPackageAudit.getId().toString(), map);
 

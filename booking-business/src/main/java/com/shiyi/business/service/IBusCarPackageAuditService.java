@@ -3,6 +3,8 @@ package com.shiyi.business.service;
 import java.io.InputStream;
 import java.util.List;
 import com.shiyi.business.domain.BusCarPackageAudit;
+import com.shiyi.business.domain.vo.AuditVo;
+import com.shiyi.business.domain.vo.HistoryCommentInfo;
 import com.shiyi.business.domain.vo.StartAuditVo;
 
 /**
@@ -73,4 +75,29 @@ public interface IBusCarPackageAuditService
      * @param id
      */
     void cancel(Long id);
+
+    /**
+     * 我的代办
+     * @return
+     */
+    List<BusCarPackageAudit> todoQuery();
+
+    /**
+     * 审批操作
+     * @param vo
+     */
+    void audit(AuditVo vo);
+
+    /**
+     * 审批历史
+     * @param id
+     * @return
+     */
+    List<HistoryCommentInfo> historyQuery(Long id);
+
+    /**
+     * 我的已办
+     * @return
+     */
+    List<BusCarPackageAudit> doneQuery();
 }

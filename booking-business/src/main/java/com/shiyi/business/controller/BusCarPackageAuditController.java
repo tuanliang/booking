@@ -2,9 +2,12 @@ package com.shiyi.business.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shiyi.business.domain.vo.AuditVo;
+import com.shiyi.business.domain.vo.HistoryCommentInfo;
 import com.shiyi.business.domain.vo.StartAuditVo;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import org.apache.commons.io.IOUtils;
@@ -128,5 +131,30 @@ public class BusCarPackageAuditController extends BaseController
     public AjaxResult cancel(@PathVariable Long id){
         busCarPackageAuditService.cancel(id);
         return AjaxResult.success();
+    }
+
+    @GetMapping("/todo")
+    public TableDataInfo todo(){
+        List<BusCarPackageAudit>list = busCarPackageAuditService.todoQuery();
+
+        return getDataTable(list);
+    }
+
+    @PostMapping("/audit")
+    public AjaxResult audit (@RequestBody AuditVo vo){
+        busCarPackageAuditService.audit(vo);
+        return AjaxResult.success();
+    }
+
+    @GetMapping("/history/{id}")
+    public TableDataInfo history(@PathVariable Long id){
+        List<HistoryCommentInfo> list = busCarPackageAuditService.historyQuery(id);
+        return getDataTable(list);
+    }
+
+    @GetMapping("/done")
+    public TableDataInfo doneQuery(){
+        List<BusCarPackageAudit>list = busCarPackageAuditService.doneQuery();
+        return getDataTable(list);
     }
 }
